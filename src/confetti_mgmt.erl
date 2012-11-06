@@ -152,8 +152,14 @@ send(Socket, Str, Args) ->
 cmd(Str) when is_list(Str) ->
     string:tokens(hd(string:tokens(Str, "\r\n")), " ").
 
+get_cfg([C]=Config) when length(Config)=:=1 andalso is_list(C) ->
+    proplists:get_value(confetti, C, []);
+get_cfg(C) ->
+    C.
+
 all_cmd_modules() ->
-    [confetti_mgmt_cmnds|?FETCH(mgmt_conf, plugins, [])].
+    Config = get_cfg(confetti:fetch(mgmt_conf)),
+    [confetti_mgmt_cmnds|proplists:get_value(plugins, Config, [])].
 
 get_plugin_help(Module) ->
     [{exports, Exports}|_] = Module:module_info(),
