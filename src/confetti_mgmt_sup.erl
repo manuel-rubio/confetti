@@ -42,7 +42,7 @@ init([]) ->
 start_socket() ->
     supervisor:start_child(?MODULE, []).
 
-get_cfg([C]=Config) when length(Config)=:=0 andalso is_list(C) ->
+get_cfg([C]=Config) when length(Config)=:=1 andalso is_list(C) ->
     proplists:get_value(confetti, C, []);
 get_cfg(C) ->
     C.
