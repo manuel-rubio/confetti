@@ -27,8 +27,9 @@ init([]) ->
             {location, MgmtConf},
             {subscribe, false}
         ]),
-    Port = ?FETCH(mgmt_conf, port, 50000),
-    IpS = ?FETCH(mgmt_conf, ip, "127.0.0.1"),
+    Config = get_cfg(confetti:fetch(mgmt_conf)),
+    Port = proplists:get_value(port, Config, 50000),
+    IpS = proplists:get_value(ip, Config, "127.0.0.1"),
     {ok, Ip} = inet_parse:ipv4_address(IpS),
     {ok, ListenSocket} = gen_tcp:listen(Port, [{active,once},
                                                {reuseaddr, true}, {ip, Ip}]),
@@ -40,4 +41,9 @@ init([]) ->
 
 start_socket() ->
     supervisor:start_child(?MODULE, []).
+
+get_cfg([C]=Config) when length(Config)=:=0 andalso is_list(C) ->
+    proplists:get_value(confetti, C, []);
+get_cfg(C) ->
+    C.
 
