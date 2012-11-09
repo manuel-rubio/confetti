@@ -158,8 +158,7 @@ get_cfg(C) ->
     C.
 
 all_cmd_modules() ->
-    Config = get_cfg(confetti:fetch(mgmt_conf)),
-    [confetti_mgmt_cmnds|proplists:get_value(plugins, Config, [])].
+    [confetti_mgmt_cmnds|?FETCH(mgmt_conf, plugins, [])].
 
 get_plugin_help(Module) ->
     [{exports, Exports}|_] = Module:module_info(),

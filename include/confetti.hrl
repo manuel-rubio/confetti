@@ -5,7 +5,7 @@
     }).
 
 -define(FETCH, fun(Provider, Key, Default) ->
-        proplists:get_value(Key, confetti:fetch(Provider), Default)
+        proplists:get_value(Key, confetti_mgmt:get_cfg(confetti:fetch(Provider)), Default)
     end).
 
 -define(SOCK(Msg), {tcp, _Port, Msg}).
