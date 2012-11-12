@@ -158,7 +158,13 @@ get_cfg(C) ->
     C.
 
 all_cmd_modules() ->
-    [confetti_mgmt_cmnds|?FETCH(mgmt_conf, plugins, [])].
+    [confetti_mgmt_cmnds|case confetti:fetch(mgmt_conf) of
+        [FetchConfig] when is_list(FetchConfig) ->
+            Confetti = proplists:get_value(confetti, FetchConfig, []),
+            proplists:get_value(plugins, Confetti, []);
+        FetchSimpleConfig ->
+            proplists:get_value(plugins, FetchSimpleConfig, [])
+    end].
 
 get_plugin_help(Module) ->
     [{exports, Exports}|_] = Module:module_info(),
